@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation System</title>
+    <style>
+        /* General body and layout styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #28a745;  /* Green background */
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        /* Form styling */
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;  /* Darker green when hovered */
+        }
+
+        /* Result styling */
+        .result-container {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        #result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        /* Image styling */
+        .background-image {
+            background-image: url('https://wallpaperaccess.com/full/1598226.jpg');  /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+        }
+
+        .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section with Background Image -->
+    <header>
+        <img src="https://tse2.mm.bing.net/th?id=OIP.oNhoxiea8nYkNGkraAQXtwHaF7&pid=Api&P=0&h=180" alt="Logo" class="logo"> <!-- Replace with your logo image -->
+        <h1>Crop Recommendation System</h1>
+    </header>
+
+    <!-- Form Container -->
+    <div class="form-container">
+        <form id="cropForm" action="http://127.0.0.1:5000/predict" method="POST">
+            <label for="N">Nitrogen (N):</label>
+            <input type="number" id="N" name="N" required>
+
+            <label for="P">Phosphorus (P):</label>
+            <input type="number" id="P" name="P" required>
+
+            <label for="K">Potassium (K):</label>
+            <input type="number" id="K" name="K" required>
+
+            <label for="temperature">Temperature (°C):</label>
+            <input type="number" id="temperature" name="temperature" required>
+
+            <label for="humidity">Humidity (%):</label>
+            <input type="number" id="humidity" name="humidity" required>
+
+            <label for="ph">pH Value:</label>
+            <input type="number" id="ph" name="ph" required>
+
+            <label for="rainfall">Rainfall (mm):</label>
+            <input type="number" id="rainfall" name="rainfall" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Result Section -->
+    <div class="result-container">
+        <h2>Recommended Crop:</h2>
+        <p id="result"></p>
+    </div>
+
+    <!-- Background Image (Optional) -->
+    <div class="background-image"></div>
+
+    <script>
+        const form = document.getElementById("cropForm");
+
+        form.onsubmit = async (event) => {
+            event.preventDefault();  // Prevent default form submission
+
+            // Collect form data and convert to JSON
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Send the form data as JSON to the backend
+            const response = await fetch(form.action, {
+                method: form.method,
+                headers: {
+                    'Content-Type': 'application/json',  // Set content type as JSON
+                },
+                body: JSON.stringify(data),  // Send form data as JSON
+            });
+
+            if (response.ok) {
+                // Parse and display the result
+                const result = await response.json();
+                document.getElementById("result").innerText = "Recommended Crop: " + result.predicted_crop;
+            } else {
+                document.getElementById("result").innerText = "Error: Unable to get prediction.";
+            }
+        };
+    </script>
+
+</body>
+</html>
