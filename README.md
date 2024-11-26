@@ -39,11 +39,6 @@ Recommendation Output:
 **Installation and Setup**
 Follow these steps to run the project locally:
 
-Clone this repository:
-
-
-git clone https://github.com/your-username/crop-recommendation-system.git
-cd crop-recommendation-system
 Install the required dependencies:
 
 pip install -r requirements.txt
